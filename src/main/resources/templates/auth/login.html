@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+
+    <th:block th:replace="~{layout/commonHeader :: commonHeader}"></th:block>
+    <style></style>
+</head>
+<body>
+<th:block th:replace="~{layout/sidebar :: sidebar}"></th:block>
+<div class="content" style="text-align: center; margin-top: 10%;">
+    <h1>🔐 로그인</h1>
+    <p>아래 방법으로 로그인하세요.</p>
+
+    <div id="errorMessage" class="alert alert-danger" style="max-width: 500px; margin: 1rem auto; display: none;"></div>
+
+    <a class="btn btn-outline-light mt-3" href="/oauth2/authorization/google">Google 로그인</a>
+    <br><br>
+    <a class="btn btn-outline-light" href="/oauth2/authorization/github">GitHub 로그인</a>
+</div>
+<script>
+
+</script>
+</body>
+</html>

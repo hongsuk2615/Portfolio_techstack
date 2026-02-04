@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Portfolio | Spring Boot Showcase</title>
+
+    <th:block th:replace="~{layout/commonHeader :: commonHeader}"></th:block>
+</head>
+<body>
+<th:block th:replace="~{layout/sidebar :: sidebar}"></th:block>
+
+<div class="content">
+    <div class="hero">
+        <h1>Spring Boot 기술 구현 포트폴리오</h1>
+        <p>실제동작하는 데모화면 구현</p>
+    </div>
+
+    <div class="cards">
+        <div class="card-tech">
+            <h5>🧱 CRUD</h5>
+            <p>Spring Data JPA를 이용한 기본 CRUD 예제입니다.<br>
+                간단한 게시판 및 사용자 관리 기능으로 구성됩니다.</p>
+        </div>
+
+        <div class="card-tech">
+            <h5>🔐 Auth (JWT + OAuth2)</h5>
+            <p>JWT 기반 자체 로그인과 Google / GitHub OAuth2 소셜 로그인을<br>
+                하나의 인증 흐름으로 통합한 예제입니다.</p>
+        </div>
+
+        <div class="card-tech">
+            <h5>📡 Kafka</h5>
+            <p>Producer-Consumer 구조로 구성된 메시징 시스템.<br>
+                실시간 로그 전송 및 비동기 이벤트 처리 구현.</p>
+        </div>
+
+        <div class="card-tech">
+            <h5>🚀 CI/CD</h5>
+            <p>GitHub Actions를 통한 자동 빌드 모니터링.<br>
+                실제 푸시 시 로그가 갱신되는 배포 시각화 포함.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 김홍석 | Built with Spring Boot + Thymeleaf
+    </div>
+</div>
+</body>
+</html>

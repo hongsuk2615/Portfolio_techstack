@@ -1,0 +1,14 @@
+<th:block th:fragment="sidebar">
+    <div class="sidebar">
+        <a th:href="@{/}"><h2>Tech Stack</h2></a>
+        <ul>
+            <li><a th:href="@{/crud}">CRUD</a></li>
+            <li><a th:href="@{/auth}">Auth (JWT + OAuth2)</a></li>
+            <li><a th:href="@{/kafka}">Kafka</a></li>
+            <li><a th:href="@{/cicd}">CI/CD</a></li>
+            <li><a th:href="@{/member}">회원 관리</a></li>
+            <li><a th:href="@{/admin/logs}">로그 모니터링</a></li>
+        </ul>
+        <div class="sidebar-user" id="sidebarUser"></div>
+    </div>
+</th:block>
