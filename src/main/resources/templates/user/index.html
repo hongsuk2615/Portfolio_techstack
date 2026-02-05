@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내정보</title>
+    <th:block th:replace="~{layout/commonHeader :: commonHeader}"></th:block>
+</head>
+<body>
+<th:block th:replace="~{layout/sidebar :: sidebar}"></th:block>
+<div class="content" style="text-align: center; margin-top: 5%;">
+    <h1>👤 내정보</h1>
+    <p>환영합니다!</p>
+
+    <div id="userInfo" style="max-width: 500px; margin: 2rem auto; text-align: left;">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">사용자 정보</h5>
+                <p><strong>이름:</strong> <span id="userName">로딩 중...</span></p>
+                <p><strong>이메일:</strong> <span id="userEmail">로딩 중...</span></p>
+                <p><strong>권한:</strong> <span id="userRole">로딩 중...</span></p>
+            </div>
+        </div>
+    </div>
+
+    <button id="logoutBtn" class="btn btn-danger mt-3">로그아웃</button>
+</div>
+<script>
+    // 사용자 정보 가져오기
+    async function loadUserInfo() {
+        try {
+            const response = await fetch('/api/auth/me');
+            const data = await response.json();
+
+            if (response.ok && data.user) {
+                document.getElementById('userName').textContent = data.user.name || '-';
+                document.getElementById('userEmail').textContent = data.user.email || '-';
+                document.getElementById('userRole').textContent = data.user.role || '-';
+            } else {
+                // 인증되지 않은 경우 로그인 페이지로
+                window.location.href = '/auth/login';
+            }
+        } catch (error) {
+            console.error('사용자 정보 로드 실패:', error);
+            window.location.href = '/auth/login';
+        }
+    }
+
+    // 로그아웃
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                window.location.href = '/auth/login';
+            }
+        } catch (error) {
+            console.error('로그아웃 실패:', error);
+        }
+    });
+
+    // 페이지 로드 시 사용자 정보 가져오기
+    loadUserInfo();
+</script>
+</body>
+</html>
