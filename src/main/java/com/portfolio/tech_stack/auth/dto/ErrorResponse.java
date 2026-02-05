@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +19,7 @@ public class ErrorResponse {
     private String error;
     private String message;
     private String path;
+    private Map<String, String> details;  // Validation 에러 상세 정보
 
     public static ErrorResponse of(Integer status, String error, String message, String path) {
         return ErrorResponse.builder()
