@@ -9,18 +9,84 @@
 </head>
 <body>
 <th:block th:replace="~{layout/sidebar :: sidebar}"></th:block>
-<div class="content" style="text-align: center; margin-top: 10%;">
+<div class="content" style="text-align: center; margin-top: 5%;">
     <h1>🔐 로그인</h1>
-    <p>아래 방법으로 로그인하세요.</p>
 
     <div id="errorMessage" class="alert alert-danger" style="max-width: 500px; margin: 1rem auto; display: none;"></div>
 
-    <a class="btn btn-outline-light mt-3" href="/oauth2/authorization/google">Google 로그인</a>
-    <br><br>
-    <a class="btn btn-outline-light" href="/oauth2/authorization/github">GitHub 로그인</a>
+    <!-- 아이디/비밀번호 로그인 폼 -->
+    <div style="max-width: 400px; margin: 2rem auto;">
+        <form id="loginForm">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="providerId" placeholder="아이디" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="password" placeholder="비밀번호" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">로그인</button>
+        </form>
+        <div class="mt-3">
+            <a href="/auth/register">계정이 없으신가요? 회원가입</a>
+        </div>
+    </div>
+
+    <!-- 구분선 -->
+    <div style="max-width: 400px; margin: 2rem auto;">
+        <hr>
+        <p class="text-muted">또는 소셜 로그인</p>
+    </div>
+
+    <!-- OAuth2 로그인 -->
+    <div>
+        <a class="btn btn-outline-light mt-2" href="/oauth2/authorization/google">Google 로그인</a>
+        <br><br>
+        <a class="btn btn-outline-light" href="/oauth2/authorization/github">GitHub 로그인</a>
+    </div>
 </div>
 <script>
+    // 아이디/비밀번호 로그인
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
+        const providerId = document.getElementById('providerId').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('errorMessage');
+
+        errorDiv.style.display = 'none';
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ providerId, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // 로그인 성공 - 내정보로 리다이렉트
+                window.location.href = '/user/info';
+            } else {
+                // 로그인 실패 - 에러 메시지 표시
+                errorDiv.textContent = data.message || '로그인에 실패했습니다';
+                errorDiv.style.display = 'block';
+            }
+        } catch (error) {
+            errorDiv.textContent = '서버 오류가 발생했습니다';
+            errorDiv.style.display = 'block';
+        }
+    });
+
+    // URL 파라미터에서 에러 메시지 확인 (OAuth2 실패 시)
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    const message = urlParams.get('message');
+
+    if (error && message) {
+        const errorDiv = document.getElementById('errorMessage');
+        errorDiv.textContent = decodeURIComponent(message);
+        errorDiv.style.display = 'block';
+    }
 </script>
 </body>
 </html>
