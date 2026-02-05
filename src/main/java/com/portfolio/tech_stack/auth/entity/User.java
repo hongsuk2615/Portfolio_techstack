@@ -8,9 +8,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users", indexes = {
-    @Index(name = "idx_users_email", columnList = "email")
-})
+@Table(name = "users",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_provider_providerId", columnNames = {"provider", "providerId"})
+    },
+    indexes = {
+        @Index(name = "idx_users_email", columnList = "email")
+    })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,10 +26,32 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    /**
+     * Provider (DEFAULT, GOOGLE, GITHUB)
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private AuthProvider provider;
+
+    /**
+     * Provider별 고유 ID
+     * - DEFAULT: 사용자 입력 username
+     * - GOOGLE: sub (Google user ID)
+     * - GITHUB: id (GitHub user ID)
+     */
+    @Column(nullable = false, length = 255)
+    private String providerId;
+
+    /**
+     * 이메일 (nullable - GitHub에서 null 가능)
+     */
+    @Column(length = 255)
     private String email;
 
-    @Column  // nullable - OAuth2 사용자는 비밀번호 없을 수 있음
+    /**
+     * 비밀번호 (nullable - OAuth2 사용자는 비밀번호 없음)
+     */
+    @Column
     private String password;
 
     @Column(nullable = false, length = 100)
@@ -33,20 +59,6 @@ public class User {
 
     @Column(length = 500)
     private String profileImageUrl;
-
-    // 최초 가입 provider (불변)
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    private AuthProvider primaryProvider;
-
-    // 연결된 모든 providers ("DEFAULT,GOOGLE,GITHUB")
-    @Column(length = 255)
-    @Builder.Default
-    private String linkedProviders = "";
-
-    // Provider별 ID 저장 (형태: "GOOGLE:123,GITHUB:456")
-    @Column(length = 1000, columnDefinition = "TEXT")
-    private String providerIds;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
