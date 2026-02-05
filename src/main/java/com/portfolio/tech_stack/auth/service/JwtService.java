@@ -37,13 +37,17 @@ public class JwtService {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.getId());
-        claims.put("email", user.getEmail());
+        claims.put("provider", user.getProvider().name());
+        claims.put("providerId", user.getProviderId());
         claims.put("role", user.getRole().name());
         claims.put("type", "ACCESS");
 
+        // subject = "provider:providerId" 형식
+        String username = user.getProvider().name() + ":" + user.getProviderId();
+
         return Jwts.builder()
                 .claims(claims)
-                .subject(user.getEmail())
+                .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()))
                 .signWith(secretKey)
@@ -96,9 +100,9 @@ public class JwtService {
     }
 
     /**
-     * 토큰에서 이메일 추출
+     * 토큰에서 username 추출 ("provider:providerId" 형식)
      */
-    public String extractEmail(String token) {
+    public String extractUsername(String token) {
         Claims claims = validateAndParseClaims(token);
         return claims.getSubject();
     }
