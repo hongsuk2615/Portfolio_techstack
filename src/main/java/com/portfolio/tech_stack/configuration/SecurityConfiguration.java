@@ -52,7 +52,8 @@ public class SecurityConfiguration {
                                 "/api/auth/register",
                                 "/api/auth/check",
                                 "/api/auth/check-providerId",
-                                "/error"
+                                "/error",
+                                "/board"
                         ).permitAll()
                         // 나머지는 인증 필요 (/user/info 등)
                         .anyRequest().authenticated()
