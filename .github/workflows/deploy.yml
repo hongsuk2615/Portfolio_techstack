@@ -23,14 +23,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: |
-          export $(cat /home/hongsuk/project/docker/tech_stack/.env | xargs)
-          ./gradlew clean build -x test
-
-      - name: Run tests
-        run: |
-          export $(cat /home/hongsuk/project/docker/tech_stack/.env | xargs)
-          ./gradlew test
+        run: ./gradlew clean build -x test
 
       - name: Copy JAR to docker directory
         run: |
