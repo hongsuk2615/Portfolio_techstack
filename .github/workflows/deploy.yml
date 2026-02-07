@@ -24,16 +24,12 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          set -a
-          source /home/hongsuk/project/docker/tech_stack/.env
-          set +a
+          export $(cat /home/hongsuk/project/docker/tech_stack/.env | xargs)
           ./gradlew clean build -x test
 
       - name: Run tests
         run: |
-          set -a
-          source /home/hongsuk/project/docker/tech_stack/.env
-          set +a
+          export $(cat /home/hongsuk/project/docker/tech_stack/.env | xargs)
           ./gradlew test
 
       - name: Copy JAR to docker directory
