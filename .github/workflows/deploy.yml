@@ -22,19 +22,38 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Load environment variables
+        run: |
+          set -a
+          source /home/hongsuk/project/docker/tech_stack/.env
+          set +a
+          echo "SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD" >> $GITHUB_ENV
+
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
       - name: Run tests
         run: ./gradlew test
 
+      - name: Copy JAR to docker directory
+        run: |
+          mkdir -p /home/hongsuk/project/docker/tech_stack/build/libs
+          cp build/libs/*.jar /home/hongsuk/project/docker/tech_stack/build/libs/
+
       - name: Build Docker image
-        run: docker compose build
+        run: |
+          cd /home/hongsuk/project/docker/tech_stack
+          docker compose build
 
       - name: Deploy with Docker Compose
         run: |
+          cd /home/hongsuk/project/docker/tech_stack
           docker compose down
           docker compose up -d
 
       - name: Check deployment status
-        run: docker compose ps
+        run: |
+          cd /home/hongsuk/project/docker/tech_stack
+          docker compose ps
