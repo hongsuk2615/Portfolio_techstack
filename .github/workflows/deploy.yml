@@ -22,8 +22,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Run tests
+        run: |
+          export $(cat /home/hongsuk/project/docker/tech_stack/.env | xargs)
+          ./gradlew test
+
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: |
+          export $(cat /home/hongsuk/project/docker/tech_stack/.env | xargs)
+          ./gradlew clean build -x test
 
       - name: Copy JAR to docker directory
         run: |
